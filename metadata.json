@@ -1,0 +1,6 @@
+{
+  "name": "AjudaMap São Luís | Echocreative",
+  "description": "Plataforma interativa de sustentabilidade e solidariedade em São Luís do Maranhão: encontre Ecopontos, Bazares, Doações, Asilos e pontos de Reciclagem na Ilha do Amor.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
