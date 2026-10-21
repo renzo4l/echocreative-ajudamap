@@ -60,7 +60,7 @@ export const CulturalFooter: React.FC = () => {
           <p>© {new Date().getFullYear()} AJUDAMAP · Echocreative.</p>
           {/* Exactly as requested: Slogan da Echocreative no bottom, and removed 'desenvolvido com carinho na ilha magnética' */}
           <p className="text-emerald-400 font-semibold tracking-wide">
-            "Mapeando hábitos verdes, guiando um futuro sustentável"
+            Mapeando hábitos verdes, guiando um futuro sustentável
           </p>
         </div>
       </div>
