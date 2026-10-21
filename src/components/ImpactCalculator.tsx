@@ -17,7 +17,7 @@ export const ImpactCalculator: React.FC = () => {
   const elderlyHelped = Math.max(1, Math.round(diapers / 4));
 
   const handleShare = () => {
-    const text = `Meu impacto na Ilha de São Luís com o AjudaMap (Echocreative): Preservei ${waterSavedLiters.toLocaleString()}L de água nos mangues, evitei ${co2AvoidedKg.toFixed(1)}kg de CO₂ e apoiei ${elderlyHelped} idoso(s) nos asilos da capital! Calcule o seu: ${window.location.href}`;
+    const text = `Meu impacto na Ilha de São Luís com o AjudaMap (Echocreators): Preservei ${waterSavedLiters.toLocaleString()}L de água nos mangues, evitei ${co2AvoidedKg.toFixed(1)}kg de CO₂ e apoiei ${elderlyHelped} idoso(s) nos asilos da capital! Calcule o seu: ${window.location.href}`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

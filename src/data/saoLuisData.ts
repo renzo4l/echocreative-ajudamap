@@ -420,7 +420,7 @@ export const ACTIVE_CAMPAIGNS: Campaign[] = [
   {
     id: 'camp-2',
     title: 'Mutirão Praia Limpa Litorânea & Manguezais',
-    organizer: 'Coletivo Maranhão Sustentável & Echocreative',
+    organizer: 'Coletivo Maranhão Sustentável & Echocreators',
     neighborhood: 'Calhau / Litorânea',
     category: 'reciclagem',
     goal: 'Meta: Recolher 800 kg de resíduos na maré baixa',

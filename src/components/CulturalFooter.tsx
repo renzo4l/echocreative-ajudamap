@@ -20,7 +20,7 @@ export const CulturalFooter: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
-              Plataforma desenvolvida pela <strong className="text-white">Echocreative</strong> para conectar a Grande Ilha de São Luís aos circuitos de solidariedade, reciclagem e conservação ecológica.
+              Plataforma desenvolvida pela <strong className="text-white">Echocreators</strong> para conectar a Grande Ilha de São Luís aos circuitos de solidariedade, reciclagem e conservação ecológica.
             </p>
           </div>
 
@@ -58,8 +58,8 @@ export const CulturalFooter: React.FC = () => {
 
         {/* Bottom Slogan Section */}
         <div className="pt-6 border-t border-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-400">
-          <p>© {new Date().getFullYear()} AJUDAMAP · Echocreative.</p>
-          {/* Exactly as requested: Slogan da Echocreative no bottom, and removed 'desenvolvido com carinho na ilha magnética' */}
+          <p>© {new Date().getFullYear()} AJUDAMAP · Echocreators.</p>
+          {/* Exactly as requested: Slogan da Echocreators no bottom, and removed 'desenvolvido com carinho na ilha magnética' */}
           <p className="text-emerald-400 font-semibold tracking-wide">
             Mapeando hábitos verdes, guiando um futuro sustentável
           </p>

@@ -25,7 +25,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="max-w-2xl">
           {/* Cultural Kicker */}
           <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 tracking-wide mb-2">
-            <span className="uppercase tracking-widest text-[11px] font-bold">Echocreative</span>
+            <span className="uppercase tracking-widest text-[11px] font-bold">Echocreators</span>
             <span aria-hidden="true" className="text-neutral-600">·</span>
             <span>Ilha do Amor</span>
             <span aria-hidden="true" className="text-neutral-600">·</span>

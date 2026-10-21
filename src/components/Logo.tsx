@@ -87,7 +87,7 @@ export const Logo: React.FC<LogoProps> = ({
             AJUDAMAP
           </span>
           <span className="text-[10px] text-emerald-400 font-semibold tracking-wide">
-            Echocreative · São Luís
+            Echocreators · São Luís
           </span>
         </div>
       )}
