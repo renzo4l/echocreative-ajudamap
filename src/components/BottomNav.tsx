@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Calculator, Sparkles, BookOpen, Shield } from 'lucide-react';
+import { MapPin, Calculator, Sparkles, BookOpen } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -27,11 +27,6 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab })
       id: 'guia',
       label: 'Guia',
       icon: BookOpen,
-    },
-    {
-      id: 'admin',
-      label: 'Admin',
-      icon: Shield,
     },
   ];
 

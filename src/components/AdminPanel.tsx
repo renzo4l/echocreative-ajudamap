@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { LocationPoint, PointCategory } from '../types';
 import { CATEGORIES_CONFIG, SÃO_LUIS_NEIGHBORHOODS } from '../data/saoLuisData';
 import { Logo } from './Logo';
@@ -46,12 +46,30 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onGoToPublicMap,
   dbStatus = { connected: true, provider: 'PostgreSQL Supabase' },
 }) => {
-  // Authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('ajudamap_admin_auth') === 'true';
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [passkey, setPasskey] = useState('');
   const [authError, setAuthError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/admin/session', { credentials: 'same-origin' })
+      .then(async (response) => (response.ok ? response.json() : null))
+      .then((session) => {
+        if (!cancelled) setIsAuthenticated(session?.authenticated === true);
+      })
+      .catch(() => {
+        if (!cancelled) setAuthError('Não foi possível verificar a sessão. Tente novamente.');
+      })
+      .finally(() => {
+        if (!cancelled) setIsCheckingSession(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Search & Filter state
   const [search, setSearch] = useState('');
@@ -73,20 +91,42 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [editDescription, setEditDescription] = useState('');
   const [editItems, setEditItems] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passkey.trim() === 'echoadmin2026' || passkey.trim() === 'admin' || passkey.trim() === 'Maumau1612!@') {
+    setAuthError('');
+
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: passkey }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || result.authenticated !== true) {
+        setAuthError(result.message || 'Chave de acesso inválida.');
+        return;
+      }
+
       setIsAuthenticated(true);
-      localStorage.setItem('ajudamap_admin_auth', 'true');
-      setAuthError('');
-    } else {
-      setAuthError('Senha de administrador incorreta. Tente "echoadmin2026" ou a senha do banco.');
+      setPasskey('');
+    } catch {
+      setAuthError('Não foi possível conectar ao servidor. Tente novamente.');
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('ajudamap_admin_auth');
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'same-origin',
+      });
+    } catch {
+      setAuthError('A sessão local foi encerrada.');
+    } finally {
+      setIsAuthenticated(false);
+    }
   };
 
   // Open Edit Modal
@@ -192,6 +232,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
   });
 
+  if (isCheckingSession) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-4 text-sm text-neutral-300" role="status">
+        Verificando sessão administrativa…
+      </div>
+    );
+  }
+
   // --- LOGIN SCREEN IF NOT AUTHENTICATED ---
   if (!isAuthenticated) {
     return (
@@ -214,23 +262,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-neutral-300 mb-1">
+              <label htmlFor="admin-key" className="block text-xs font-semibold text-neutral-300 mb-1">
                 Chave de Acesso Admin
               </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
+                  id="admin-key"
                   type="password"
+                  autoComplete="current-password"
+                  required
                   value={passkey}
                   onChange={(e) => setPasskey(e.target.value)}
-                  placeholder="Digite a chave (ex: echoadmin2026)"
+                  placeholder="Digite sua chave de administrador"
                   className="w-full pl-9 pr-4 py-2.5 bg-neutral-950 border border-neutral-700 rounded-xl text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
               {authError && (
                 <p className="text-[11px] text-red-400 mt-1.5 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{authError}</span>
+                  <span role="alert">{authError}</span>
                 </p>
               )}
             </div>
