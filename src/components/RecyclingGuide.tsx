@@ -13,7 +13,7 @@ export const RecyclingGuide: React.FC = () => {
             <span aria-hidden="true" className="text-neutral-600">·</span>
             <span>São Luís — MA</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="font-display text-[20px] sm:text-[32px] font-extrabold text-white tracking-tight">
             Guia Cultural & Descarte Consciente
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-neutral-300 leading-relaxed">

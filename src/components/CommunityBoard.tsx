@@ -20,7 +20,7 @@ export const CommunityBoard: React.FC = () => {
             <span aria-hidden="true" className="text-neutral-600">·</span>
             <span>Mobilização Ludovicense</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="font-display text-[20px] sm:text-[32px] font-extrabold text-white tracking-tight">
             Campanhas & Voluntariado em São Luís
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-neutral-300 leading-relaxed">

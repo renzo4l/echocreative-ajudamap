@@ -32,7 +32,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span>São Luís, Maranhão</span>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h1 className="font-display text-[26px] sm:text-[32px] lg:text-[44px] font-extrabold tracking-tight text-white leading-tight">
             Mapa de sustentabilidade e solidariedade da <span className="text-emerald-400">Grande Ilha</span>.
           </h1>
 
