@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Shield } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface NavbarProps {
@@ -72,17 +72,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             Guia Cultural
           </button>
 
-          <button
-            onClick={() => setActiveTab('admin')}
-            className={`flex items-center gap-1 transition-colors cursor-pointer ${
-              activeTab === 'admin'
-                ? 'text-emerald-400 font-bold border-b-2 border-emerald-400 pb-0.5'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            <Shield className="w-3.5 h-3.5" />
-            <span>Admin</span>
-          </button>
         </nav>
 
         {/* Zone 3: Actions */}

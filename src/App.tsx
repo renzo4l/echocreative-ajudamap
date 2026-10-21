@@ -18,19 +18,25 @@ import { RecyclingGuide } from './components/RecyclingGuide';
 import { AdminPanel } from './components/AdminPanel';
 import { BottomNav } from './components/BottomNav';
 import { CulturalFooter } from './components/CulturalFooter';
+import { PUBLIC_SITE_URL, isAdminHostname } from './admin-domain';
 
 const LOCAL_STORAGE_KEY = 'ajudamap_custom_points';
 const DELETED_POINTS_KEY = 'ajudamap_deleted_points';
 
 export default function App() {
-  // Determine initial route based on URL pathname or hash (e.g. /admin or #admin)
+  const isAdminHost =
+    typeof window !== 'undefined' &&
+    (isAdminHostname(window.location.hostname) ||
+      (import.meta.env.DEV &&
+        (['localhost', '127.0.0.1'].includes(window.location.hostname) ||
+          window.location.hostname.endsWith('.vercel.run'))));
+
   const getInitialTab = (): string => {
+    if (isAdminHost) return 'admin';
     if (typeof window !== 'undefined') {
       const path = window.location.pathname.toLowerCase();
       const hash = window.location.hash.toLowerCase();
-      if (path === '/admin' || path.startsWith('/admin') || hash === '#admin') {
-        return 'admin';
-      }
+      if (path === '/admin' || path.startsWith('/admin')) return 'mapa';
       if (hash === '#calculadora') return 'calculadora';
       if (hash === '#mural') return 'mural';
       if (hash === '#guia') return 'guia';
@@ -40,8 +46,15 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<string>(getInitialTab);
 
+  useEffect(() => {
+    if (!isAdminHost && window.location.pathname.toLowerCase().startsWith('/admin')) {
+      window.history.replaceState(null, '', '/');
+    }
+  }, [isAdminHost]);
+
   // Sync route changes with browser history / URL
   const handleTabChange = (tab: string) => {
+    if (tab === 'admin' && !isAdminHost) return;
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
       if (tab === 'admin') {
@@ -206,8 +219,9 @@ export default function App() {
 
     // Persist to backend database
     try {
-      await fetch('/api/points', {
+      await fetch(isAdminHost ? '/api/admin/points' : '/api/points', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPoint),
       });
@@ -241,6 +255,7 @@ export default function App() {
     try {
       await fetch(`/api/points/${encodeURIComponent(pointId)}`, {
         method: 'DELETE',
+        credentials: 'same-origin',
       });
     } catch (err) {
       console.warn('Could not sync deletion to backend:', err);
@@ -258,8 +273,9 @@ export default function App() {
     setPoints((prev) => prev.map((p) => (p.id === updatedPoint.id ? updatedPoint : p)));
 
     try {
-      await fetch('/api/points', {
+      await fetch('/api/admin/points', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedPoint),
       });
@@ -282,6 +298,7 @@ export default function App() {
     try {
       await fetch(`/api/points/${encodeURIComponent(pointId)}/verify`, {
         method: 'PATCH',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ verified: nextState }),
       });
@@ -299,7 +316,7 @@ export default function App() {
     setPoints(INITIAL_POINTS);
 
     try {
-      await fetch('/api/points/reset', { method: 'POST' });
+      await fetch('/api/points/reset', { method: 'POST', credentials: 'same-origin' });
     } catch (err) {
       console.warn('Could not reset in backend:', err);
     }
@@ -317,17 +334,19 @@ export default function App() {
       )}
 
       {/* Top Navbar */}
-      <Navbar
-        onOpenAddModal={() => setIsAddModalOpen(true)}
-        activeTab={activeTab}
-        setActiveTab={handleTabChange}
-        pointsCount={points.length}
-      />
+      {!isAdminHost && (
+        <Navbar
+          onOpenAddModal={() => setIsAddModalOpen(true)}
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+          pointsCount={points.length}
+        />
+      )}
 
       {/* Multi-Page Route Content */}
       <main className="flex-1 bg-black">
         {/* Page 1: Mapa da Ilha */}
-        {activeTab === 'mapa' && (
+        {!isAdminHost && activeTab === 'mapa' && (
           <div className="animate-in fade-in duration-150">
             <HeroSection
               searchQuery={searchQuery}
@@ -370,28 +389,28 @@ export default function App() {
         )}
 
         {/* Page 2: Calculadora de Impacto */}
-        {activeTab === 'calculadora' && (
+        {!isAdminHost && activeTab === 'calculadora' && (
           <div className="animate-in fade-in duration-150">
             <ImpactCalculator />
           </div>
         )}
 
         {/* Page 3: Mural da Ilha */}
-        {activeTab === 'mural' && (
+        {!isAdminHost && activeTab === 'mural' && (
           <div className="animate-in fade-in duration-150">
             <CommunityBoard />
           </div>
         )}
 
         {/* Page 4: Guia Cultural & Descarte */}
-        {activeTab === 'guia' && (
+        {!isAdminHost && activeTab === 'guia' && (
           <div className="animate-in fade-in duration-150">
             <RecyclingGuide />
           </div>
         )}
 
         {/* Page 5: Painel Admin (Acessível via /admin ou aba Admin) */}
-        {activeTab === 'admin' && (
+        {isAdminHost && activeTab === 'admin' && (
           <div className="animate-in fade-in duration-150">
             <AdminPanel
               points={points}
@@ -401,7 +420,7 @@ export default function App() {
               onResetDefaultPoints={handleResetDefaultPoints}
               onOpenAddModal={() => setIsAddModalOpen(true)}
               onSelectPoint={handleSelectPoint}
-              onGoToPublicMap={() => handleTabChange('mapa')}
+              onGoToPublicMap={() => window.location.assign(PUBLIC_SITE_URL)}
               dbStatus={dbStatus}
             />
           </div>
@@ -409,10 +428,12 @@ export default function App() {
       </main>
 
       {/* Dedicated Bottom Navigation present on each category */}
-      <BottomNav
-        activeTab={activeTab}
-        setActiveTab={handleTabChange}
-      />
+      {!isAdminHost && (
+        <BottomNav
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+        />
+      )}
 
       {/* Point Detail Modal */}
       {isDetailModalOpen && (
@@ -420,7 +441,7 @@ export default function App() {
           point={selectedPoint}
           onClose={() => setIsDetailModalOpen(false)}
           onDeletePoint={handleDeletePoint}
-          isAdmin={activeTab === 'admin'}
+          isAdmin={isAdminHost && activeTab === 'admin'}
         />
       )}
 
@@ -433,7 +454,7 @@ export default function App() {
       />
 
       {/* Cultural Footer */}
-      <CulturalFooter />
+      {!isAdminHost && <CulturalFooter />}
     </div>
   );
 }
