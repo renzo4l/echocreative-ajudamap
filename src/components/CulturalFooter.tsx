@@ -48,8 +48,9 @@ export const CulturalFooter: React.FC = () => {
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <span>Batalhão de Polícia Ambiental: (98) 3214-8650</span>
               </li>
-              <li className="text-[11px] text-emerald-400/90 pt-1">
-                Hospital Aldenora Bello: (98) 3089-3000
+              <li className="flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>Hospital Aldenora Bello: (98) 3089-3000</span>
               </li>
             </ul>
           </div>
