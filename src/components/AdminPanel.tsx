@@ -204,7 +204,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-neutral-800 px-2 py-0.5 rounded border border-neutral-700 mb-1">
               Painel Restrito
             </span>
-            <h1 className="font-display font-extrabold text-2xl text-white">
+            <h1 className="font-display font-extrabold text-[20px] text-white">
               Administração AjudaMap
             </h1>
             <p className="text-xs text-neutral-400 mt-1">
@@ -271,7 +271,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <span className="text-neutral-600">·</span>
                 <span className="text-neutral-400 font-normal">URL: /admin</span>
               </div>
-              <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+              <h1 className="font-display text-[20px] sm:text-[26px] font-extrabold text-white leading-tight">
                 Gestão da Base de Dados · São Luís
               </h1>
             </div>
